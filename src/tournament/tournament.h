@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <set>
 
 #include <utility/typesizes.h>
 #include <utility/uintstringconversion.h>
@@ -165,6 +166,8 @@ namespace tournament
      * in the player IDs.
      */
     bool isValid{ };
+    
+    bool excludedFromPairing{};
 
     Player() = default;
     Player(
@@ -180,7 +183,8 @@ namespace tournament
         rankIndex(id_),
         rating(rating_),
         scoreWithoutAcceleration(points_),
-        isValid(true)
+        isValid(true),
+        excludedFromPairing(false)
     { }
 
     /**
@@ -267,6 +271,10 @@ namespace tournament
      * number used for choosing colors and breaking ties.
      */
     std::deque<player_index> playersByRank;
+    /**
+     * Players to exclude from next round pairing
+     */
+    std::set<player_index> playersExcludedFromPairing;
     round_index playedRounds{ };
     round_index expectedRounds{ };
     points pointsForWin{ 10u };

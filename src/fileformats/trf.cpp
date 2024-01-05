@@ -338,6 +338,10 @@ namespace fileformats
             std::move(tournament.players[id].forbiddenPairs);
           tournament.players[id] = std::move(player);
         }
+        if (tournament.playersExcludedFromPairing.find(player.id) != tournament.playersExcludedFromPairing.end())
+        {
+          tournament.players[id].excludedFromPairing = true;
+        }
         tournament.playersByRank.push_back(id);
         if (data)
         {
@@ -403,6 +407,22 @@ namespace fileformats
           ++tokenizer;
         }
         return result;
+      }
+      
+      /**
+       * Process an XXZ line.
+       */
+      void readPlayersExcludedFromPairing(
+          const std::u32string &line,
+          tournament::Tournament &tournament)
+      {
+        const std::u32string string = line.substr(3);
+        utility::Tokenizer<std::u32string> tokenizer(string, U" \t");
+        while (tokenizer != utility::Tokenizer<std::u32string>())
+        {
+          tournament.playersExcludedFromPairing.insert(readPlayerId(*tokenizer));
+          ++tokenizer;
+        }
       }
 
       /**
@@ -878,6 +898,10 @@ namespace fileformats
                     data->lines.back() = U"XXC" + newLine;
                   }
                 }
+              }
+              else if (prefix == U"XXZ")
+              {
+                readPlayersExcludedFromPairing(line, result);
               }
               else if (prefix == U"BBW")
               {

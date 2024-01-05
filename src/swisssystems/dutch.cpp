@@ -828,7 +828,7 @@ namespace swisssystems
       std::list<const tournament::Player *> sortedPlayers;
       for (tournament::Player &player : tournament.players)
       {
-        if (player.isValid)
+        if (player.isValid && !player.excludedFromPairing)
         {
           if (player.matches.size() <= tournament.playedRounds)
           {

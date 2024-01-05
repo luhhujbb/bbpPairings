@@ -708,7 +708,7 @@ namespace swisssystems
       for (tournament::Player &player : tournament.players)
       {
         adjusted_score adjustedScore{ };
-        if (player.isValid)
+        if (player.isValid && !player.excludedFromPairing)
         {
           if (player.matches.size() <= tournament.playedRounds)
           {
